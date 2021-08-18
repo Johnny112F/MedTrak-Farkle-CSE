@@ -3,9 +3,43 @@ var diceArr = [];
 var score = 0;
 var round = 1;
 var turn = 1;
+var currPlayer = 1;
+let playerDiv = document.querySelector(".player")
 let roundDiv = document.querySelector(".round");
 let rowScore = document.querySelector(".score");
-let turnDiv = document.querySelector(".turn");
+let turnDiv = document.querySelector(".turn"); 
+let playersHTML = document.querySelector(".numPlayers");
+let numRoundsHTML = document.querySelector(".numRounds");
+let numPointsHTML = document.querySelector(".numPoints")
+let rules = document.querySelector(".rules")
+let numPlayers = 1;
+//each index represents a player, the value at each index will be the score.
+let playerScores = [0];
+let numRounds = 10;
+let numPointsToWin = 10000;
+
+function checkAndHidePlayers() {
+  if(playersHTML.value !== "") {
+    numPlayers = parseInt(playersHTML.value);
+    let dropDownPlayers = document.querySelector(".dropdown-numPlayers");
+    dropDownPlayers.remove();
+    playerScore.length = numPlayers;
+  }
+}
+
+function checkAndHideRounds() {
+  if(numRoundsHTML.value !== "") {
+    numRounds = parseInt(numRoundsHTML.value);
+    numRoundsHTML.remove();
+  }
+}
+
+function checkAndHidePoints() {
+  if(numPointsHTML.value !== "") {
+    numPointsToWin = parseInt(numPointsHTML.value);
+    numPointsHTML.remove();
+  }
+}
 
 function initializeDice() {
   for (i = 0; i < 6; i++) {
@@ -18,6 +52,7 @@ function initializeDice() {
 }
 function initializeGame() {
   initializeDice();
+  playerDiv.innerHTML = `Player ${currPlayer}`
   roundDiv.innerHTML = `Round ${round}`;
   turnDiv.innerHTML = `Turn ${turn}`;
   rowScore.innerHTML = score;
@@ -40,7 +75,7 @@ function rollDice() {
 
 function bankScore() {
   score += calculateScore(diceArr);
-  if (score >= 10000) {
+  if (score >= numPointsToWin) {
     startOver();
   }
   rowScore.innerHTML = score;
@@ -48,29 +83,64 @@ function bankScore() {
   updateDiceImg();
   turn = 1;
   round++;
+  play
   roundDiv.innerHTML = `Round ${round}`;
   turnDiv.innerHTML = `Turn ${turn}`;
 }
 
 function checkTurn() {
+  let playerIndex = 0;
   clickedDiceArr = diceArr.filter(dice => dice.clicked === 0);
   if (calculateScore(clickedDiceArr) == 0) {
     updateDiceImg();
     alert("Farkle!");
+    playerIndex++
+    if(playerIndex > 4){
+      currPlayer = 1;
+    } else{
+      currPlayer = playerIndex
+    }
+    playerScores[playerIndex] = score;
     round++;
     turn = 1;
     initializeDice();
     updateDiceImg();
-    roundDiv.innerHTML = `Round ${round}`;
-    turnDiv.innerHTML = `Turn ${turn}`;
+    let winner = checkRound();
+    if(winner) {
+      announceWinner(winner)
+    } else{
+      playerDiv.innerHTML = `Player ${currPlayer} is up next`
+      roundDiv.innerHTML = `Round ${round}`;
+      turnDiv.innerHTML = `Turn ${turn}`;
+    }
   }
   else {
     turn++;
     turnDiv.innerHTML = `Turn ${turn}`;
   }
-
 }
 
+function checkRound(){
+  if(round >= numRounds){
+    let top = checkScores()
+    return top;
+    }
+    return;
+  }
+
+
+function checkScores() {
+  let topScore = 0;
+  
+      for(let val in playerScores){
+        if(playerScores[val] > topScore) {
+          topScore = playerScores[val];
+          currPlayer = val;
+      }
+    }
+    return topScore
+}
+  
 function calculateScore(arr) {
   let points = 0;
   let ones = [];
@@ -219,4 +289,10 @@ function startOver() {
   updateDiceImg();
   roundDiv.innerHTML = `Round ${round}`;
   turnDiv.innerHTML = `Turn ${turn}`;
+}
+
+function showRules() {
+  let div_element = document.createElement("p")
+  div_element.innerText = "Farkle is a multiplayer dice game where a user can select the number of players, rounds, and points to play the game. After selecting each of these fields they will be hidden, and rolling will commence. When a player rolls if they hit a 1,3, or 5 they can choose to either bank or risk these dice. If they do not hit a 1,3, or 5 on the next turn they will lose all score for that round a 'farkle' will be announced and stored for their turn's value. If they do hit any of the dice mentioned or combinations of three of a kind they will be given the option to add these to their last score in the turn without accumulating combo value. When a player chooses to bank the score for that turn will be added to their overall score. The first player to hit the decided upon score or the top scoring player at the end of all turns will be awarded as being the winner.";
+  rules.append(div_element);
 }

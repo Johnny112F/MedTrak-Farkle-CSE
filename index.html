@@ -8,7 +8,43 @@
 
 <body onload="initializeGame()">
 	<header class="row header">Welcome to Farkle!</header>
-  <div class="round"></div>
+	<div class="row">
+		<div class="dropdown-numPlayers">
+			<select class="numPlayers" name="number-of-players" onchange="checkAndHidePlayers()">
+				<option value="">Please choose number of players</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+			</select>
+		</div>
+		<div class="dropdown-numRounds">
+			<select class="numRounds" name="number-of-rounds" onchange="checkAndHideRounds()">
+				<option value="">Please choose number of rounds</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="4">5</option>
+				<option value="4">6</option>
+				<option value="4">7</option>
+				<option value="4">8</option>
+				<option value="4">9</option>
+				<option value="4">10</option>
+			</select>
+		</div>
+		<div class="dropdown-numPoints">
+			<select class="numPoints" name="number-of-players" onchange="checkAndHidePoints()">
+				<option value="">Please choose number of points</option>
+				<option value="1">1000</option>
+				<option value="2">3000</option>
+				<option value="3">5000</option>
+				<option value="4">7000</option>
+			</select>
+		</div>
+	</div>
+	<div class="player"></div>
+	<div class="round"></div>
   <div class="turn"></div>
 	<div class="row">
 		<!-- Dice images -->
@@ -28,7 +64,12 @@
 	<div class="row">
 		<button class="button roll column" onclick="rollDice()">Roll Dice</button>
 		<button class="button bank column" onclick="bankScore()">Bank Score</button>
-    <button class="button start-over column" onClick="startOver()">Start Over</button>
+    <button class="button start-over column" onclick="startOver()">Start Over</button>
 	</div>
+
+	
+		<button class="button-rules" onclick="showRules()">ShowRules</button>
+		<div class="display-rules"></div>
+	
 </body>
 </html>
