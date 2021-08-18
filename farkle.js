@@ -11,7 +11,7 @@ let turnDiv = document.querySelector(".turn");
 let playersHTML = document.querySelector(".numPlayers");
 let numRoundsHTML = document.querySelector(".numRounds");
 let numPointsHTML = document.querySelector(".numPoints")
-let rules = document.querySelector(".rules")
+let rules = document.querySelector(".display-rules")
 let numPlayers = 1;
 //each index represents a player, the value at each index will be the score.
 let playerScores = [0];

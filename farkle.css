@@ -65,6 +65,10 @@ body{
 	font-family: arial;
 	color: #fff;
 }
+.display-rules {
+	bottom: 20%;
+	position: absolute;
+}
 .dice{
 	max-width: 520px;
 	margin:0 auto;
