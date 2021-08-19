@@ -1,29 +1,27 @@
 var diceArr = [];
-
+var numPlayers = 0;
 var score = 0;
 var round = 1;
 var turn = 1;
-var currPlayer = 1;
-let playerDiv = document.querySelector(".player")
+let player = 0;
+let players = [];
+let numRounds = 10;
+let numPointsToWin = 10000
 let roundDiv = document.querySelector(".round");
 let rowScore = document.querySelector(".score");
-let turnDiv = document.querySelector(".turn"); 
+let turnDiv = document.querySelector(".turn");
 let playersHTML = document.querySelector(".numPlayers");
 let numRoundsHTML = document.querySelector(".numRounds");
 let numPointsHTML = document.querySelector(".numPoints")
 let rules = document.querySelector(".display-rules")
-let numPlayers = 1;
-//each index represents a player, the value at each index will be the score.
-let playerScores = [0];
-let numRounds = 10;
-let numPointsToWin = 10000;
+let playerDiv = document.querySelector(".player");
 
 function checkAndHidePlayers() {
   if(playersHTML.value !== "") {
     numPlayers = parseInt(playersHTML.value);
     let dropDownPlayers = document.querySelector(".dropdown-numPlayers");
     dropDownPlayers.remove();
-    playerScore.length = numPlayers;
+    players = Array(numPlayers).fill(0);
   }
 }
 
@@ -52,7 +50,7 @@ function initializeDice() {
 }
 function initializeGame() {
   initializeDice();
-  playerDiv.innerHTML = `Player ${currPlayer}`
+  playerDiv.innerHTML = `player ${player + 1}`;
   roundDiv.innerHTML = `Round ${round}`;
   turnDiv.innerHTML = `Turn ${turn}`;
   rowScore.innerHTML = score;
@@ -73,74 +71,69 @@ function rollDice() {
   checkTurn();
 }
 
+function currHighPlayerScore() {
+  let highScore = 0;
+  for(let val of players) {
+    if(val > highScore) {
+      highScore = val;
+    }
+  }
+  return highScore;
+}
+
 function bankScore() {
   score += calculateScore(diceArr);
-  if (score >= numPointsToWin) {
+  let currHigh = currHighPlayerScore();
+
+  if (currHigh >= numPointsToWin) {
+    console.log(`${players.indexOf(currHigh)} wins`)
     startOver();
   }
+  players[player] += score;
   rowScore.innerHTML = score;
   initializeDice();
   updateDiceImg();
   turn = 1;
-  round++;
-  play
+  player++;
+  if(player > numPlayers) {
+    player = 0;
+    round++;
+    if(round > numRounds){
+        let currHigh = currHighPlayerScore();
+
+        if (currHigh >= numPointsToWin) {
+        alert(`${players.indexOf(currHigh)} wins`)
+        startOver();
+        }
+      }
+    }
+  
   roundDiv.innerHTML = `Round ${round}`;
   turnDiv.innerHTML = `Turn ${turn}`;
+  playerDiv.innerHTML = `player ${player + 1} goes next`
+  score = 0;
 }
 
 function checkTurn() {
-  let playerIndex = 0;
   clickedDiceArr = diceArr.filter(dice => dice.clicked === 0);
   if (calculateScore(clickedDiceArr) == 0) {
     updateDiceImg();
     alert("Farkle!");
-    playerIndex++
-    if(playerIndex > 4){
-      currPlayer = 1;
-    } else{
-      currPlayer = playerIndex
-    }
-    playerScores[playerIndex] = score;
+    player++;
     round++;
     turn = 1;
     initializeDice();
     updateDiceImg();
-    let winner = checkRound();
-    if(winner) {
-      announceWinner(winner)
-    } else{
-      playerDiv.innerHTML = `Player ${currPlayer} is up next`
-      roundDiv.innerHTML = `Round ${round}`;
-      turnDiv.innerHTML = `Turn ${turn}`;
-    }
+    roundDiv.innerHTML = `Round ${round}`;
+    turnDiv.innerHTML = `Turn ${turn}`;
   }
   else {
     turn++;
     turnDiv.innerHTML = `Turn ${turn}`;
   }
+
 }
 
-function checkRound(){
-  if(round >= numRounds){
-    let top = checkScores()
-    return top;
-    }
-    return;
-  }
-
-
-function checkScores() {
-  let topScore = 0;
-  
-      for(let val in playerScores){
-        if(playerScores[val] > topScore) {
-          topScore = playerScores[val];
-          currPlayer = val;
-      }
-    }
-    return topScore
-}
-  
 function calculateScore(arr) {
   let points = 0;
   let ones = [];
@@ -285,6 +278,7 @@ function startOver() {
   round = 1;
   score = 0;
   turn = 1;
+  players = [];
   initializeDice();
   updateDiceImg();
   roundDiv.innerHTML = `Round ${round}`;
