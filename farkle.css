@@ -57,7 +57,7 @@ body{
 	font-family: arial;
 	color: #fff;
 }
-.player .round, .turn {
+.player, .round, .turn {
   height: 50px;
 	max-height: 100%;
 	font-size: 20px;
@@ -115,6 +115,13 @@ body{
 button:hover {
   color: #568203;
   background-color: white;
+}
+.display-rules {
+	position: absolute;
+	display: none;
+	color: #D7C9B1;
+	width: 300px;
+	right: 20px;
 }
 .roll{
 }

@@ -59,7 +59,6 @@ function initializeGame() {
 
 /*Rolling dice values*/
 function rollDice() {
-  console.log(diceArr);
   for (var i = 0; i < 6; i++) {
     if (diceArr[i].clicked === 0) {
       diceArr[i].value = Math.floor((Math.random() * 6) + 1);
@@ -95,7 +94,7 @@ function bankScore() {
   updateDiceImg();
   turn = 1;
   player++;
-  if(player > numPlayers) {
+  if(player > numPlayers-1) {
     player = 0;
     round++;
     if(round > numRounds){
@@ -286,7 +285,18 @@ function startOver() {
 }
 
 function showRules() {
-  let div_element = document.createElement("p")
-  div_element.innerText = "Farkle is a multiplayer dice game where a user can select the number of players, rounds, and points to play the game. After selecting each of these fields they will be hidden, and rolling will commence. When a player rolls if they hit a 1,3, or 5 they can choose to either bank or risk these dice. If they do not hit a 1,3, or 5 on the next turn they will lose all score for that round a 'farkle' will be announced and stored for their turn's value. If they do hit any of the dice mentioned or combinations of three of a kind they will be given the option to add these to their last score in the turn without accumulating combo value. When a player chooses to bank the score for that turn will be added to their overall score. The first player to hit the decided upon score or the top scoring player at the end of all turns will be awarded as being the winner.";
-  rules.append(div_element);
+  console.log("in show rules")
+  let rules = document.querySelector(".display-rules");
+  if(rules.style.display === "" || rules.style.display === "none"){
+    rules.style.display = "block";
+  } else{
+    rules.style.display = "none"
+  }
+}
+
+function hideRules() {
+  let rules = document.querySelector(".display-rules");
+  if(rules.style.display === "block"){
+    rules.style.display = "none";
+  }
 }
