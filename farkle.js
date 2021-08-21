@@ -17,7 +17,7 @@ let rules = document.querySelector(".display-rules")
 let playerDiv = document.querySelector(".player");
 
 function checkAndHidePlayers() {
-  if(playersHTML.value !== "") {
+  if (playersHTML.value !== "") {
     numPlayers = parseInt(playersHTML.value);
     let dropDownPlayers = document.querySelector(".dropdown-numPlayers");
     dropDownPlayers.remove();
@@ -26,14 +26,14 @@ function checkAndHidePlayers() {
 }
 
 function checkAndHideRounds() {
-  if(numRoundsHTML.value !== "") {
+  if (numRoundsHTML.value !== "") {
     numRounds = parseInt(numRoundsHTML.value);
     numRoundsHTML.remove();
   }
 }
 
 function checkAndHidePoints() {
-  if(numPointsHTML.value !== "") {
+  if (numPointsHTML.value !== "") {
     numPointsToWin = parseInt(numPointsHTML.value);
     numPointsHTML.remove();
   }
@@ -72,8 +72,8 @@ function rollDice() {
 
 function currHighPlayerScore() {
   let highScore = 0;
-  for(let val of players) {
-    if(val > highScore) {
+  for (let val of players) {
+    if (val > highScore) {
       highScore = val;
     }
   }
@@ -82,31 +82,33 @@ function currHighPlayerScore() {
 
 function bankScore() {
   score += calculateScore(diceArr);
+  players[player] += score;
   let currHigh = currHighPlayerScore();
-
   if (currHigh >= numPointsToWin) {
-    console.log(`${players.indexOf(currHigh)} wins`)
+    alert(`${players.indexOf(currHigh + 1)} wins`)
     startOver();
   }
   players[player] += score;
   rowScore.innerHTML = score;
   initializeDice();
   updateDiceImg();
+  removeDiceTransparencies()
   turn = 1;
   player++;
-  if(player > numPlayers-1) {
+  if (player > numPlayers - 1) {
     player = 0;
     round++;
-    if(round > numRounds){
-        let currHigh = currHighPlayerScore();
-
-        if (currHigh >= numPointsToWin) {
-        alert(`${players.indexOf(currHigh)} wins`)
+    if (round > numRounds) {
+      currHigh = currHighPlayerScore();
+      alert(`${players.indexOf(currHigh) + 1} wins`)
         startOver();
-        }
+    }
+      if (currHigh >= numPointsToWin) {
+        alert(`${players.indexOf(currHigh) + 1} wins`)
+        startOver();
       }
     }
-  
+
   roundDiv.innerHTML = `Round ${round}`;
   turnDiv.innerHTML = `Turn ${turn}`;
   playerDiv.innerHTML = `player ${player + 1} goes next`
@@ -123,8 +125,10 @@ function checkTurn() {
     turn = 1;
     initializeDice();
     updateDiceImg();
+    removeDiceTransparencies()
     roundDiv.innerHTML = `Round ${round}`;
     turnDiv.innerHTML = `Turn ${turn}`;
+    playerDiv.innerHTML = `player ${player + 1} goes next`
   }
   else {
     turn++;
@@ -262,6 +266,14 @@ function updateDiceImg() {
   }
 }
 
+function removeDiceTransparencies() {
+  var diceImage;
+  for (var i = 0; i < 6; i++) {
+    diceImage = "images/" + (diceArr[i].value) + ".png";
+    document.getElementById(diceArr[i].id).classList.remove("transparent");
+  }
+}
+
 function diceClick(img) {
   var i = img.getAttribute("data-number");
 
@@ -280,23 +292,21 @@ function startOver() {
   players = [];
   initializeDice();
   updateDiceImg();
-  roundDiv.innerHTML = `Round ${round}`;
-  turnDiv.innerHTML = `Turn ${turn}`;
 }
 
 function showRules() {
   console.log("in show rules")
   let rules = document.querySelector(".display-rules");
-  if(rules.style.display === "" || rules.style.display === "none"){
+  if (rules.style.display === "" || rules.style.display === "none") {
     rules.style.display = "block";
-  } else{
+  } else {
     rules.style.display = "none"
   }
 }
 
 function hideRules() {
   let rules = document.querySelector(".display-rules");
-  if(rules.style.display === "block"){
+  if (rules.style.display === "block") {
     rules.style.display = "none";
   }
 }
